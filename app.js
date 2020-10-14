@@ -1,52 +1,41 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
+let Schema = mongoose.Schema;
 
-app.get('/about', (req, res)=>{
-
-    let pageTitle= "About";
-
-   res.render('pages/about',{pageTitle});
+let testSchema = new Schema({
+    name: String
 });
-app.get('/', (req, res)=> {
 
-    let title = "EJS Title";
-    let pageTitle= "Home";
-    let posts = [
-        {
-            id: 1,
-            title: "1st Post Title",
-            body: "Our Post Body",
-            published: false
-        },
-        {
-            id: 2,
-            title: "2nd Post Title",
-            body: "Our Post Body",
-            published: false
-        },
-        {
-            id: 3,
-            title: "3rd Post Title",
-            body: "Our Post Body",
-            published: false
-        },
-        {
-            id: 4,
-            title: "4th Post Title",
-            body: "Our Post Body",
-            published: false
-        },
 
-    ];
+let Test = mongoose.model('Test', testSchema);
 
-    res.render('pages/index', {title, posts, pageTitle});
-});
+
+app.get('/', (req, res)=>{
+
+    let test = new Test({
+        name: "IA Masum"
+    });
+
+    test.save()
+        .then(t => res.send(t))
+        .catch(err => console.log(err));
+})
 
 
 const PORT = process.env.PORT || 3030;
-app.listen(PORT, ()=> console.log(`Server is Running on PORT: ${PORT} .`));
+
+mongoose.connect(
+        `mongodb+srv://Imran_ali:kBDDbrdXC3vT55k@cluster0.wkjey.mongodb.net/test?retryWrites=true";`,
+        {useNewUrlParser: true}
+     )
+    .then(() => {
+        app.listen(PORT, () => console.log(`Server is Running on PORT: ${PORT} .`));
+    })
+    .catch(err => console.log(err));
+
 
