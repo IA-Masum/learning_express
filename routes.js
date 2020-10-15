@@ -4,7 +4,7 @@ const {getAllContacts, getSingleContact,updateContact,deleteContact, addContact}
 
 router.get('/:id',getSingleContact);
 router.put('/:id',updateContact);
-router.delete('/:id',deleteContact);
+router.get('/delete/:id',deleteContact);
 router.post('/',addContact);
 router.get('/',getAllContacts);
 

@@ -1,2 +1,41 @@
-</body>
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script>
+            window.onload  = function(){
+                let editBtns = document.getElementsByClassName('edit-btn');
+                let form = document.getElementById('contact-form');
+                let resetBtn = document.getElementById('reset-btn');
+
+                ;[...editBtns].forEach(btn => {
+                    btn.addEventListener( "click",function(e){
+
+                        let {id, name, phone, email} = e.target.dataset;
+
+                        form[0].value = id
+                        form[1].value = name
+                        form[2].value = email
+                        form[3].value = phone
+                        form[4].value = "Update";
+
+                        resetBtn.style.display = "inline";
+
+                    })
+                })
+
+                resetBtn.addEventListener('click', function(e){
+                    form[0].value = ""
+                    form[1].value = ""
+                    form[2].value = ""
+                    form[3].value = ""
+                    form[4].value = "Submit";
+
+                    e.target.style.display = 'none';
+                })
+            };
+        </script>
+
+    </body>
 </html>

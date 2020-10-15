@@ -4,8 +4,11 @@ const Contact = require('./Models/Contact');
 const getAllContacts = (req, res) => {
 
     Contact.find()
-        .then(contacts => res.json(contacts))
-        .catch(e => console.log(e))
+        .then(contacts => res.render('pages/index', {contacts, error: {}}))
+        .catch(e => {
+            console.log(e)
+            res.json({message: "Error Occurred!"})
+        })
 
 }
 
@@ -15,7 +18,10 @@ const getSingleContact = (req, res) => {
 
     Contact.findById(id)
         .then(contact => res.json(contact))
-        .catch(e => console.log(e))
+        .catch(e => {
+            console.log(e)
+            res.json({message: "Error Occurred!"})
+        })
 
 }
 
@@ -23,17 +29,78 @@ const getSingleContact = (req, res) => {
 const addContact = (req, res) => {
 
 
-    let {name, email, phone} = req.body
+    let {name, email, phone, id} = req.body
 
-    let contact = new Contact({
-        name,
-        email,
-        phone
-    })
 
-    contact.save()
-        .then(c => res.json(c))
-        .catch(e => console.log(e));
+    let error = {}
+
+    if (!name) {
+        error.name = "Enter Your Name"
+    }
+
+    if (!phone) {
+        error.phone = "Enter Your Phone"
+    }
+
+    if (!email) {
+        error.email = "Enter Your Email"
+    }
+
+
+    let isError = Object.keys(error).length > 0
+
+    if (isError) {
+
+        Contact.find()
+            .then(contacts => res.render('pages/index', {contacts, error}))
+            .catch(e => {
+                console.log(e)
+                res.json({message: "Error Occurred!"})
+            })
+
+    } else {
+
+        if (id) {
+
+            Contact.findOneAndUpdate({_id: id}, {$set: {name, email, phone}})
+                .then(() => {
+                        Contact.find()
+                            .then(contacts => res.render('pages/index', {contacts, error}))
+                            .catch(e => {
+                                console.log(e)
+                                res.json({message: "Error Occurred!"})
+                            })
+                    }
+                )
+                .catch(e => {
+                    console.log(e)
+                    res.json({message: "Error Occurred!"})
+                })
+
+        } else {
+            let contact = new Contact({
+                name,
+                email,
+                phone
+            })
+
+            contact.save()
+                .then(() => {
+                    Contact.find()
+                        .then(contacts => res.render('pages/index', {contacts, error}))
+                        .catch(e => {
+                            console.log(e)
+                            res.json({message: "Error Occurred!"})
+                        })
+                })
+                .catch(e => {
+                    console.log(e)
+                    res.json({message: "Error Occurred!"})
+                })
+
+        }
+
+    }
 
 }
 
@@ -53,8 +120,18 @@ const deleteContact = (req, res) => {
 
     let {id} = req.params;
     Contact.findOneAndDelete({_id: id})
-        .then(c => res.json(c))
-        .catch(e => console.log(e))
+        .then(c => {
+            Contact.find()
+                .then(contacts => res.render('pages/index', {contacts, error: {}}))
+                .catch(e => {
+                    console.log(e)
+                    res.json({message: "Error Occurred!"})
+                })
+        })
+        .catch(e => {
+            console.log(e)
+            res.json({message: "Error Occurred!"})
+        })
 }
 
 module.exports = {getAllContacts, getSingleContact, addContact, updateContact, deleteContact}
