@@ -1,11 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
+const router = require('./routes');
+
 const app = express();
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json())
 
 // app.set('view engine', 'ejs');
 
-
+app.use('/contacts',router);
 
 const PORT = process.env.PORT || 3030;
 

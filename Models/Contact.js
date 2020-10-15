@@ -1,4 +1,4 @@
-const {Schema} = require('mongoose');
+const {Schema, model} = require('mongoose');
 
 
 const contactSchema = new Schema({
@@ -22,3 +22,7 @@ const contactSchema = new Schema({
         trim: true
     }
 });
+
+const Contact = model('Contact', contactSchema)
+
+module.exports = Contact
